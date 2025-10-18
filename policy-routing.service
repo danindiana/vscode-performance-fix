@@ -1,0 +1,16 @@
+[Unit]
+Description=Policy-Based Routing for Multi-NIC Configuration
+After=network-online.target NetworkManager.service systemd-networkd.service
+Wants=network-online.target
+Before=docker.service
+
+[Service]
+Type=oneshot
+ExecStartPre=/bin/sleep 5
+ExecStart=/home/jeb/programs/vscode_performance_fix_20251018_032616/configure_policy_routing.sh
+RemainAfterExit=yes
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
