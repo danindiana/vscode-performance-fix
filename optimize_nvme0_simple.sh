@@ -1,0 +1,15 @@
+#!/bin/bash
+echo "=== Optimizing nvme0 (Intel 660P Boot Drive) ==="
+echo "Reducing read-ahead for random I/O workload..."
+echo 128 | sudo tee /sys/block/nvme0n1/queue/read_ahead_kb
+echo "Done!"
+echo ""
+echo "Current configuration:"
+echo "  Read-ahead: $(cat /sys/block/nvme0n1/queue/read_ahead_kb)KB"
+echo "  Queue depth: $(cat /sys/block/nvme0n1/queue/nr_requests)"
+echo "  Scheduler: $(cat /sys/block/nvme0n1/queue/scheduler)"
+echo ""
+echo "Hardware limitations:"
+echo "  - Intel 660P supports only 16 MSI-X vectors"
+echo "  - Limited to 9 I/O queues (8 + 1 admin)"
+echo "  - Cannot increase beyond hardware capability"
