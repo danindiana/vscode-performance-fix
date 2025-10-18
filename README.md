@@ -229,3 +229,5 @@ All easily fixable with the right diagnosis and tools!
 ---
 
 **⭐ If this helped you, please star the repo and share with others experiencing VS Code performance issues!**
+
+Brought to you by https://calisota.ai/
