@@ -200,8 +200,33 @@ vm.dirty_expire_centisecs = 3000
 ## 📋 System Info
 
 - **OS:** Ubuntu 22.04.5 LTS (applies to most Linux distributions)
+- **Kernel:** 6.8.0-85-generic
 - **VS Code:** 1.105.1 (Electron 37.6.0)
+- **Hardware:** AMD Ryzen Threadripper, Dual Intel X540-T2 10G, Dual NVMe SSDs
 - **Investigation Date:** October 18, 2025
+
+---
+
+## 🔄 Post-Reboot Verification
+
+All optimizations have been **verified to survive system reboot** (tested October 18, 2025):
+
+### ✅ Network Configuration Persistent
+- Both 10G ports maintain 8 combined queues
+- Service conflict resolved (old 4-queue service disabled)
+- New 8-queue optimization service active and enabled
+
+### ✅ NVMe Optimizations Persistent
+- Kernel parameters applied: `nvme.write_queues=16`
+- Queue counts maintained across reboot
+- Optimal interrupt distribution preserved
+
+### ✅ IRQ Balancing Configured Optimally
+- **Discovery:** System already configured for oneshot mode (`IRQBALANCE_ONESHOT=1`)
+- **Behavior:** IRQs balanced **once at boot**, then remain static
+- **Misconception Clarified:** No periodic rebalancing occurring (service correctly shows "inactive")
+
+See [IRQ_BALANCING_ONESHOT_DISCOVERY.md](IRQ_BALANCING_ONESHOT_DISCOVERY.md) for details.
 
 ---
 

@@ -1,7 +1,8 @@
 # 🎉 Complete Backpressure Solution Summary
 
 **Date:** October 18, 2025  
-**Status:** ✅ All tools created and configured
+**Status:** ✅ All tools created and configured  
+**Last Updated:** October 18, 2025 - Post-Reboot Verification Complete
 
 ## What Was Done
 
@@ -186,6 +187,30 @@ cat /proc/sys/fs/inotify/max_user_watches
 4. ❌ 1.9M files overwhelming watchers (SIGNIFICANTLY REDUCED)
 
 **Result:** System should now be 70-80% better!
+
+---
+
+## Post-Reboot Verification (October 18, 2025)
+
+### ✅ All Optimizations Survived Reboot
+
+**Network Configuration:**
+- enp3s0f0: 8 combined queues (persistent) ✅
+- enp3s0f1: 8 combined queues (persistent) ✅
+- Service conflict resolved (old service disabled) ✅
+
+**NVMe Configuration:**
+- Kernel parameters applied: `nvme.write_queues=16` ✅
+- nvme0: 9 queues (Intel 660P - hardware limited) ✅
+- nvme1: 49 queues (WD Black SN750 - 16 write queues) ✅
+
+**IRQ Balancing Discovery:**
+- Configuration: `IRQBALANCE_ONESHOT=1` ✅
+- Behavior: Balances **once at boot**, then exits ✅
+- Status: "inactive (dead)" is **CORRECT** for oneshot mode ✅
+- User concern about "rebalancing every 15 min": **Already addressed!** ✅
+
+See: [IRQ_BALANCING_ONESHOT_DISCOVERY.md](IRQ_BALANCING_ONESHOT_DISCOVERY.md)
 
 ---
 
