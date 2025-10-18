@@ -1,0 +1,72 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║          SYSTEM REBOOT CHECKLIST - GPU Configuration Applied         ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+✅ COMPLETED BEFORE REBOOT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. X11 GPU Configuration Installed
+   Location: /etc/X11/xorg.conf.d/10-nvidia-primary-3060.conf
+   Purpose: Make RTX 3060 primary display, keep RTX 3080 for ML
+
+2. All Changes Committed to Git
+   Repository: ~/programs/vscode_performance_fix_20251018_032616
+   Commits: 3 total (includes GPU configuration)
+
+3. Verification Script Ready
+   Location: ~/programs/vscode_performance_fix_20251018_032616/gpu_setup_and_verify.sh
+   Usage: bash gpu_setup_and_verify.sh
+
+🔄 CURRENT GPU STATE (Before Reboot):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+GPU 0 (RTX 3080): Primary display - 450MiB Xorg, 62W, 24% util
+GPU 1 (RTX 3060): Secondary       -  67MiB Xorg, 14W, 42% util
+
+📋 AFTER REBOOT - TODO LIST:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 1: Verify GPU Assignment
+   $ nvidia-smi
+   
+   Expected Result:
+   ✓ GPU 1 (RTX 3060): Disp.A = On, HIGH Xorg memory (~400-500MB)
+   ✓ GPU 0 (RTX 3080): Disp.A = Off or minimal Xorg (<100MB)
+
+STEP 2: Run Verification Script
+   $ bash ~/programs/vscode_performance_fix_20251018_032616/gpu_setup_and_verify.sh
+
+STEP 3: Fix Chrome Performance
+   a) Open Chrome
+   b) Press Shift+Esc (Chrome Task Manager)
+   c) Kill high CPU process (currently PID 44063)
+   
+   d) Go to chrome://extensions
+   e) DISABLE: "Adblock Plus - free ad blocker" (306MB, 84% CPU)
+   
+   f) Install uBlock Origin (lightweight alternative, ~5MB)
+   
+   g) Go to chrome://settings
+   h) System → ENABLE "Use hardware acceleration when available"
+   i) Restart Chrome
+
+STEP 4: Verify Chrome GPU Acceleration
+   a) Open chrome://gpu
+   b) Check "Graphics Feature Status" = "Hardware accelerated"
+   c) Check "GL_RENDERER" = "NVIDIA GeForce RTX 3060"
+
+STEP 5: Push to GitHub (Optional)
+   $ cd ~/programs/vscode_performance_fix_20251018_032616
+   $ git push -u origin main
+   
+   Note: Requires creating repo at github.com/danindiana/vscode-performance-fix first
+
+🎯 EXPECTED PERFORMANCE IMPROVEMENTS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Chrome CPU usage: 191% → ~10-20%
+• Chrome memory: 23GB → ~5-8GB
+• System stuttering: ELIMINATED
+• RTX 3080: Available for ML workloads (was wasting 62W on display)
+• RTX 3060: Handling all GPU acceleration efficiently
+
+╔══════════════════════════════════════════════════════════════════════╗
+║                    READY TO REBOOT: sudo reboot                      ║
+╚══════════════════════════════════════════════════════════════════════╝
