@@ -2,6 +2,50 @@
 
 > **Complete investigation and fixes for VS Code stuttering, backpressure, and system-wide freezes on Linux**
 
+## 📊 Visual Guide
+
+This repository includes comprehensive mermaid diagrams to help understand the problems, solutions, and architecture:
+
+- **[Comprehensive Solution Map](diagrams/comprehensive-solution-map.md)** ⭐ - Complete journey from problem to solution
+- **[Repository Structure & Git Workflow](diagrams/git-workflow.md)** - Development process and tool organization
+- **[System Architecture](diagrams/git-workflow.md#5-system-architecture---full-stack)** - Full stack from VS Code to hardware
+- **[Detailed Problem-Solution Diagrams](diagrams/readme.md)** - Individual component visualizations
+
+### Key Visualizations Available:
+- Problem-to-Solution Journey Map
+- Multi-Layer Problem Analysis
+- Before/After System Comparison
+- Tool Dependency Graph
+- Network Architecture (Multi-NIC)
+- Git Workflow & Branch Strategy
+- Complete Metrics Dashboard
+
+```mermaid
+graph LR
+    A[🐛 Stuttering<br/>& Freezes] --> B[🔍 Diagnose]
+    B --> C{Root Cause?}
+    C -->|94%| D[📁 File Bloat<br/>1.9M files]
+    C -->|6%| E[💾 Dirty Pages<br/>Too Aggressive]
+    D --> F[🧹 Cleanup<br/>Scripts]
+    E --> G[⚙️ Kernel<br/>Tuning]
+    F --> H[✅ Fixed]
+    G --> H
+
+    style A fill:#ffebee
+    style H fill:#e8f5e9
+    style D fill:#fff3e0
+    style E fill:#fff3e0
+```
+
+**Quick Links:**
+- [Problem Overview](#-problem)
+- [Root Causes](#-root-causes-identified)
+- [Solutions](#-solutions-applied)
+- [Results](#-results)
+- [Quick Start](#-quick-start)
+
+---
+
 ## 🎯 Problem
 
 Experiencing severe performance issues with VS Code on Linux:
@@ -127,27 +171,89 @@ vm.dirty_expire_centisecs = 3000
 
 ---
 
+## 📈 Architecture Overview
+
+The repository addresses issues across the entire stack - from application layer to hardware:
+
+```mermaid
+graph TB
+    subgraph "🖥️ Application Layer"
+        VSCODE[VS Code/Electron]
+        CHROME[Chrome Browser]
+    end
+
+    subgraph "📁 File System Issues → FIXED"
+        FILES[1.9M files<br/>113K git tracked<br/>338K Python cache]
+        INOTIFY[Inotify Watchers<br/>Overwhelmed]
+    end
+
+    subgraph "🔧 Kernel Layer → OPTIMIZED"
+        DIRTY[Dirty Pages<br/>3%→20% ratio]
+        SCHED[I/O Scheduler]
+    end
+
+    subgraph "🌐 Network Layer → OPTIMIZED"
+        POLICY[Policy Routing<br/>3 NICs]
+        QUEUES[8 Combined Queues<br/>was 4]
+    end
+
+    subgraph "💽 Storage Layer → OPTIMIZED"
+        NVME[Dual NVMe<br/>IRQ Balanced]
+    end
+
+    VSCODE --> FILES
+    CHROME --> FILES
+    FILES --> INOTIFY
+    INOTIFY --> DIRTY
+    DIRTY --> SCHED
+    SCHED --> NVME
+    CHROME --> POLICY
+    POLICY --> QUEUES
+
+    classDef fixed fill:#e8f5e9,stroke:#2e7d32,stroke-width:3px
+    classDef optimized fill:#e1f5ff,stroke:#01579b,stroke-width:2px
+    class FILES,DIRTY fixed
+    class POLICY,QUEUES,NVME optimized
+```
+
+**See [System Architecture Details](diagrams/git-workflow.md#5-system-architecture---full-stack) for comprehensive visualization**
+
+---
+
 ## 🛠️ Tools Included
 
-### Diagnostic Scripts
-- `diagnose_io_freeze_nosudo.sh` - Diagnose system freeze issues
-- `count_all_git_files.sh` - Monitor git-tracked file count
-- `analyze_git_repos.sh` - Analyze repository file counts
+```mermaid
+mindmap
+  root((Toolbox))
+    🔍 Diagnostics
+      diagnose_io_freeze_nosudo.sh
+      count_all_git_files.sh
+      analyze_git_repos.sh
+      analyze_all_irq_starvation.sh
+    🧹 Cleanup
+      cleanup_python_cache.sh
+      git_smart_cleanup.sh
+      aggressive_git_cleanup.sh
+      aggressive_degit_phase2.sh
+    🔧 Fixes
+      fix_dirty_page_freeze.sh
+      fix_network_service_conflict.sh
+      configure_policy_routing.sh
+      configure_irqbalance_oneshot.sh
+    📊 Monitoring
+      monitor_nvme_performance.sh
+      nvme-status.sh
+      vscode_gpu_status.sh
+      system-status-motd.sh
+    📚 Documentation
+      30+ Markdown Docs
+      Mermaid Diagrams
+      Analysis Reports
+```
 
-### Cleanup Scripts
-- `cleanup_python_cache.sh` - Remove Python cache files
-- `git_smart_cleanup.sh` - Safe build artifact cleanup
-- `git_cleanup_comprehensive.sh` - Advanced git cleanup options
-- `aggressive_git_cleanup.sh` - De-git clone-only repositories
-- `aggressive_degit_phase2.sh` - Aggressive large project cleanup
-
-### Fix Scripts
-- `fix_dirty_page_freeze.sh` - Fix kernel dirty page settings
-
-### Documentation
-- `backpressure_analysis_report.md` - Initial investigation
-- `COMPLETE_SOLUTION_SUMMARY.md` - Phase 1 summary
-- `PERFORMANCE_FIX_SUCCESS.md` - Complete success report
+**Detailed Tool Documentation:**
+- **[Tool Dependency Graph](diagrams/git-workflow.md#4-tool-dependency-graph)** - How tools relate to each other
+- **[Complete Toolbelt Map](diagrams/readme.md#8-toolbelt-map)** - Visual tool organization
 
 ---
 
@@ -204,6 +310,71 @@ vm.dirty_expire_centisecs = 3000
 - **VS Code:** 1.105.1 (Electron 37.6.0)
 - **Hardware:** AMD Ryzen Threadripper, Dual Intel X540-T2 10G, Dual NVMe SSDs
 - **Investigation Date:** October 18, 2025
+
+---
+
+## 🌐 Advanced: Multi-NIC Network Architecture
+
+For systems with multiple network interfaces, this repository includes policy-based routing configuration to eliminate asymmetric routing issues:
+
+```mermaid
+graph TB
+    subgraph "Applications"
+        CHROME[Chrome/Firefox<br/>Desktop Apps]
+        DOWNLOAD[Large Downloads<br/>wget/curl]
+        BACKUP[Background Sync<br/>rsync]
+    end
+
+    subgraph "Policy Routing"
+        DEFAULT[Default Route<br/>metric 100]
+        SECONDARY[Secondary Route<br/>metric 200]
+        TERTIARY[Tertiary Route<br/>metric 300]
+    end
+
+    subgraph "Network Interfaces"
+        NIC1[enp3s0f0<br/>Intel X540 10G<br/>192.168.1.64<br/>8 queues]
+        NIC2[enp3s0f1<br/>Intel X540 10G<br/>192.168.1.113<br/>8 queues]
+        NIC3[enp9s0<br/>Realtek 1G<br/>192.168.1.85]
+    end
+
+    subgraph "Routing Tables"
+        TABLE100[Table 100<br/>from .64]
+        TABLE101[Table 101<br/>from .113]
+        TABLE102[Table 102<br/>from .85]
+    end
+
+    CHROME --> DEFAULT
+    DOWNLOAD --> SECONDARY
+    BACKUP --> TERTIARY
+
+    DEFAULT --> NIC1
+    SECONDARY --> NIC2
+    TERTIARY --> NIC3
+
+    NIC1 -.-> TABLE100
+    NIC2 -.-> TABLE101
+    NIC3 -.-> TABLE102
+
+    TABLE100 -.Symmetric.-> NIC1
+    TABLE101 -.Symmetric.-> NIC2
+    TABLE102 -.Symmetric.-> NIC3
+
+    classDef primary fill:#e8f5e9,stroke:#2e7d32,stroke-width:3px
+    classDef secondary fill:#e1f5ff,stroke:#01579b,stroke-width:2px
+    classDef tertiary fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+
+    class DEFAULT,NIC1,TABLE100 primary
+    class SECONDARY,NIC2,TABLE101 secondary
+    class TERTIARY,NIC3,TABLE102 tertiary
+```
+
+**Key Benefits:**
+- ✅ No asymmetric routing (each NIC handles its own TX/RX)
+- ✅ Eliminates 10-second freezes caused by multipath routing
+- ✅ Application-level control over which NIC to use
+- ✅ Automatic failover via metric-based priorities
+
+**See:** [POLICY_ROUTING_EXPLAINED.md](POLICY_ROUTING_EXPLAINED.md) for complete details
 
 ---
 
